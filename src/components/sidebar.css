@@ -1,0 +1,10 @@
+.sidebar {
+    position: fixed; /* or position: absolute; */
+    top: 0;
+    left: 0;
+    display: flex;
+    flex-direction: column; /* Ensure flex items stack vertically */
+    background-color: aqua;
+    width: 17.2%;
+    height: 100%; /* Capture entire height of container */
+}
