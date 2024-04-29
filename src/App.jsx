@@ -3,6 +3,7 @@ import "./App.css";
 import axios from "axios";
 import Sidebar from "./components/Sidebar";
 import { useSpeechSynthesis } from "react-speech-kit"
+import SpeechToText from "./components/SpeechtoText";
 
 function App() {
   const { speak } = useSpeechSynthesis();
@@ -23,8 +24,9 @@ function App() {
           contents: [{ parts: [{ text: question }] }],
         },
       });
+      const filteredResponse = response["data"]["candidates"][0]["content"]["parts"][0]["text"].replace(/[^\w\s]/gi, '');
       setAnswer(
-        response["data"]["candidates"][0]["content"]["parts"][0]["text"]
+        filteredResponse
       );
     } catch (error) {
       setAnswer("Sorry - Something went wrong. Please try again!");
@@ -36,7 +38,9 @@ function App() {
 
   // Function to start speaking
   const startSpeaking = (text) => {
+    setIsAudioOn(true);
     text = text.replace(/\s*\*+\s*/g, '');
+    // text = text.replace(/[^\w\s]/gi, '');
     // If speech synthesis is already speaking, stop it
     if (utterance && speechSynthesis.speaking) {
       speechSynthesis.cancel();
@@ -121,8 +125,9 @@ function App() {
         <div className="w-full md:w-2/3 m-auto text-center rounded bg-gray-50 my-1">
           {/* <ReactMarkdown className="p-3">{answer}</ReactMarkdown> */}
           <p>{answer}</p>
+          <SpeechToText setQuestion={setQuestion} />
           <button className="bg-red-300 rounded-3xl p-2 m-2 hover:bg-red-100" onClick={() => text_to_audio_hindi(answer)}>Hindi Speaking</button>
-          <button className="bg-amber-200 rounded-3xl p-2 m-2 hover:bg-amber-100" onClick={() => !isAudioOn && startSpeaking(answer)}>Start Speaking</button>
+          <button className="bg-amber-200 rounded-3xl p-2 m-1 hover:bg-amber-100" onClick={() => !isAudioOn && startSpeaking(answer)}>English Speaking</button>
           <button className="bg-red-200 rounded-3xl p-2 hover:bg-red-100" onClick={() => isAudioOn && stopSpeaking()}>Stop Speaking</button>
         </div>
       </div>

@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Voice to Text</title>
+</head>
+<body>
+    <button id="start-btn">Start Listening</button>
+    <div id="output"></div>
+
+    <script>
+        window.onload = function() {
+            const output = document.getElementById('output');
+            const startBtn = document.getElementById('start-btn');
+
+            // Check browser support
+            if ('SpeechRecognition' in window || 'webkitSpeechRecognition' in window) {
+                const recognition = new (window.SpeechRecognition || window.webkitSpeechRecognition)();
+
+                recognition.continuous = true; // Continuous speech recognition
+                recognition.lang = 'en-US'; // Set language
+
+                recognition.onstart = function() {
+                    output.innerHTML = 'Listening...';
+                };
+
+                recognition.onerror = function(event) {
+                    output.innerHTML = 'Error occurred in recognition: ' + event.error;
+                };
+
+                recognition.onresult = function(event) {
+                    const transcript = event.results[event.results.length - 1][0].transcript;
+                    output.innerHTML = 'You said: ' + transcript;
+                };
+
+                startBtn.addEventListener('click', function() {
+                    recognition.start();
+                });
+            } else {
+                output.innerHTML = 'Speech recognition not supported by your browser.';
+            }
+        };
+    </script>
+</body>
+</html>
